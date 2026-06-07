@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-in-production}
+      - DATABASE_URL=postgresql://clinicalai:clinicalai_pass@db:5432/clinicalai
+      - AUDIT_LOG_PATH=/app/audit_logs/audit.jsonl
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./models:/app/models
+      - audit_logs:/app/audit_logs
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: clinicalai
+      POSTGRES_PASSWORD: clinicalai_pass
+      POSTGRES_DB: clinicalai
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  audit_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: audit_writer
+      POSTGRES_PASSWORD: audit_write_only_pass
+      POSTGRES_DB: audit
+    volumes:
+      - audit_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  audit_pgdata:
+  audit_logs:

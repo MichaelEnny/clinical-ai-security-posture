@@ -1,0 +1,22 @@
+{
+  "model_name": "ed_admission",
+  "model_type": "RandomForestClassifier",
+  "n_estimators": 200,
+  "feature_names": [
+    "heartrate",
+    "temperature",
+    "sbp",
+    "dbp",
+    "o2sat",
+    "resprate",
+    "pain",
+    "acuity",
+    "gender_enc"
+  ],
+  "label_name": "label",
+  "n_train": 266108,
+  "n_test": 57024,
+  "auroc": 0.7498,
+  "accuracy": 0.6826,
+  "model_version": "1.0"
+}

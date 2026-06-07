@@ -1,0 +1,21 @@
+{
+  "model_name": "icu_mortality",
+  "model_type": "RandomForestClassifier",
+  "n_estimators": 200,
+  "feature_names": [
+    "heart_rate",
+    "resp_rate",
+    "spo2",
+    "sbp",
+    "dbp",
+    "temperature_f",
+    "anchor_age",
+    "gender_enc"
+  ],
+  "label_name": "label",
+  "n_train": 57839,
+  "n_test": 12395,
+  "auroc": 0.772,
+  "accuracy": 0.7755,
+  "model_version": "1.0"
+}
