@@ -1,7 +1,7 @@
 # Evaluating Security-by-Design in Clinical AI
 ## Adversarial Testing, Threat Assessment, and Security Posture Scoring
 
-This is the replication code for Paper 3 of the thesis. It runs adversarial attacks against two clinical AI models trained on MIMIC-IV data, tests access controls and audit logging, scores HIPAA and FHIR compliance, and computes a Security Posture Score (SPS) for each system.
+This is the code for the thesis's security posture. It runs adversarial attacks against two clinical AI models trained on MIMIC-IV data, tests access controls and audit logging, scores HIPAA and FHIR compliance, and computes a Security Posture Score (SPS) for each system.
 
 The two models under evaluation are an ICU mortality predictor and an emergency department admission classifier. Both are Random Forest classifiers served through a FastAPI inference API with JWT-based role access control.
 
