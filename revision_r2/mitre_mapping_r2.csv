@@ -1,0 +1,13 @@
+id,technique,tactic,system_layer,mitigation_implemented,tested,result,notes
+T1566,Phishing: Spearphishing Link,Initial Access,Authentication,True,True,PASS,JWT authentication required; unauthenticated access denied on all endpoints
+T1078,Valid Accounts: Default Accounts,Initial Access,API,True,True,PARTIAL,"No vendor default accounts; the three test accounts are provisioned in source code with fixed demonstration passwords, which must be replaced by an identity provider before production"
+T1110,Brute Force: Password Spraying,Credential Access,API,True,True,PASS,Rate limiting active on /auth/token; repeated failures return 401
+T1005,Data from Local System,Collection,Database,True,True,PARTIAL,DB not deployed in test env (Docker not installed); RBAC prevents unauthorized API access
+T1071,Application Layer Protocol: Web Protocols,Command and Control,API,True,True,PARTIAL,TLS 1.3 in production config; dev env runs HTTP on localhost — upgrade required before production
+T1565,Data Manipulation,Impact,Model Input,True,True,PARTIAL,Input bounds validation implemented but does not stop within-range manipulation: nearest-target line search flips 27.6% (ICU) and 6.0% (ED) of predictions with all inputs inside clinical bounds
+T1530,Data from Cloud Storage,Collection,Data Layer,True,True,PASS,"No cloud storage in the test deployment; model and log storage reachable only through the API, where the auditor role is read-only (HTTP 403 on POST /predict)"
+T1041,Exfiltration Over C2 Channel,Exfiltration,API Output,True,False,PARTIAL,Rate limiting configured (100 preds/hr/user); automated exfiltration stress test not conducted
+T1499,Endpoint Denial of Service,Impact,API,True,True,PASS,FastAPI + uvicorn stable under 35 concurrent predictions; no downtime or degradation observed
+T1190,Exploit Public-Facing Application,Initial Access,API,True,True,PASS,"Pydantic schema validation rejects malformed JSON, oversized payloads, and injection patterns (422 response)"
+CUSTOM-MI,Membership Inference,Collection,Model,False,True,PASS,"Shadow-model accuracy 0.507 (ICU, p=0.68) and 0.478 (ED, p=0.17); loss-threshold accuracy 0.496 and 0.499; LOW risk"
+CUSTOM-ADV,Adversarial Input,Impact,Model Input,True,True,PARTIAL,FGSM (eps=0.1) flips 9.8% (ICU) and 2.6% (ED); nearest-target line search flips 27.6% and 6.0%; larger in-range perturbations flip up to 87% (ICU); bounds validation removes none

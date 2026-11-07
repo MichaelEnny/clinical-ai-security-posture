@@ -5,6 +5,9 @@ This is the code for the thesis's security posture. It runs adversarial attacks 
 
 The two models under evaluation are an ICU mortality predictor and an emergency department admission classifier. Both are Random Forest classifiers served through a FastAPI inference API with JWT-based role access control.
 
+
+> **Revision R2 correction.** The adversarial results in earlier versions of the paper came from a clipping bug in `adversarial/`. The corrected pipeline that produces every number in the current paper is in [`revision_r2/`](revision_r2/README.md). Run that instead of `run_all_tests.py` for the adversarial, membership inference and SPS results.
+
 ---
 
 ## What You Need

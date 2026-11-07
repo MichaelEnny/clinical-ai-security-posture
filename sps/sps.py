@@ -137,7 +137,7 @@ def sensitivity_analysis(base_inputs: dict) -> list:
     no_adversarial_defense["auroc_drop"] = 0.25
     r = compute_sps(**no_adversarial_defense)
     ablations.append({
-        "scenario": "Remove input validation defense",
+        "scenario": "Adversarial AUROC drop fixed at 0.25",
         "sps": r["sps"],
         "sps_drop": round(base_sps - r["sps"], 2),
         "dimension_affected": "adversarial_input_robustness",

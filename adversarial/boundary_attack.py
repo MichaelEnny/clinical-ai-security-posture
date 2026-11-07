@@ -10,7 +10,18 @@ from sklearn.metrics import roc_auc_score
 
 class BoundaryAttack:
     def __init__(self, model, feature_names, feature_bounds=None,
-                 step_size=0.05, max_steps=100):
+                 step_size=0.05, max_steps=100, scaler=None, perturb_mask=None):
+        """
+        feature_bounds are in RAW clinical units; inputs are standardized.
+        `scaler` is required whenever feature_bounds are given (R1 clipped
+        standardized values to raw bounds; see revision_r2/README.md).
+        perturb_mask: 0/1 array of features the attacker may change.
+        """
+        if feature_bounds is not None and scaler is None:
+            raise ValueError("scaler is required: feature bounds are in raw units")
+        self.scaler = scaler
+        self.mask = (np.ones(len(feature_names)) if perturb_mask is None
+                     else np.asarray(perturb_mask, float))
         self.model = model
         self.feature_names = feature_names
         self.step_size = step_size
@@ -22,13 +33,15 @@ class BoundaryAttack:
             self.feature_bounds = feature_bounds
 
     def _clip(self, x):
-        x = x.copy()
+        if self.scaler is None:
+            return x.copy()
+        r = self.scaler.inverse_transform(x[None])[0]
         for i, (lo, hi) in enumerate(self.feature_bounds):
             if lo is not None:
-                x[i] = max(x[i], lo)
+                r[i] = max(r[i], lo)
             if hi is not None:
-                x[i] = min(x[i], hi)
-        return x
+                r[i] = min(r[i], hi)
+        return self.scaler.transform(r[None])[0]
 
     def _find_opposite_class_sample(self, x, X_pool):
         orig_pred = self.model.predict([x])[0]
@@ -47,7 +60,7 @@ class BoundaryAttack:
 
         current = x.copy()
         for step in range(1, self.max_steps + 1):
-            direction = opposite - current
+            direction = (opposite - current) * self.mask
             norm = np.linalg.norm(direction)
             if norm < 1e-10:
                 break
