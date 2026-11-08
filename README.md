@@ -175,4 +175,4 @@ If you see a bcrypt error on startup, your environment has passlib and bcrypt 4.
 
 ## License
 
-MIT license. See the repository root for the full license text.
+MIT license. See the [LICENSE](LICENSE) file for the full license text.
